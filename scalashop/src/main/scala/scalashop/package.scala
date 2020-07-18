@@ -9,7 +9,7 @@ package object scalashop extends BoxBlurKernelInterface {
   /** The value of every pixel is represented as a 32 bit integer. */
   type RGBA = Int
 
-  type RGBATuple =  (RGBA, RGBA, RGBA, RGBA)
+  type RGBATuple = (RGBA, RGBA, RGBA, RGBA)
 
   /** Returns the red component. */
   def red(c: RGBA): Int = (0xff000000 & c) >>> 24
@@ -45,12 +45,11 @@ package object scalashop extends BoxBlurKernelInterface {
   }
 
   /** Computes the blurred RGBA value of a single pixel of the input image. */
-  def boxBlurKernel(src: Img, x: Int, y: Int, radius: Int): RGBA =
-  {
-    val yMin = y - radius
-    val yMax = y + radius
-    val xMin = x - radius
-    val xMax = x + radius
+  def boxBlurKernel(src: Img, x: Int, y: Int, radius: Int): RGBA = {
+    val yMin = clamp(y - radius, 0, src.height-1)
+    val yMax = clamp(y + radius, 0, src.height-1)
+    val xMin = clamp(x - radius, 0, src.width-1)
+    val xMax = clamp(x + radius, 0, src.width-1)
 
     def channels(src: Img, x: Int, y: Int): RGBATuple = {
       val here = src.apply(x, y)
@@ -61,18 +60,18 @@ package object scalashop extends BoxBlurKernelInterface {
     def isOrigin(xHere: Int, yHere: Int): Boolean = xHere == x && yHere == y
 
     val colourTuples = for {
-         yIndex <- (y - radius) to (y + radius)
-         xIndex <- (x - radius) to (x + radius)
-         if (clamp(xIndex, xMin, xMax) == xIndex
-           && clamp(yIndex, yMin, yMax) == yIndex
-           && !isOrigin(xIndex, yIndex))
-         } yield channels(src, xIndex, yIndex)
+      yIndex <- yMin to yMax
+      xIndex <- xMin to xMax
+    } yield channels(src, xIndex, yIndex)
 
     val n = colourTuples.length
-    val c = colourTuples.reduce((acc, tuple) => tuple match {
-      case (a, b, c, d) => (acc._1 + a, acc._2 + b, acc._3 + c, acc._4 + d)
-    })
-    rgba(c._1/n, c._2/n, c._3/n, c._4/n)
+
+    if (n == 0) n else {
+      val c = colourTuples.reduce((acc, tuple) => tuple match {
+        case (a, b, c, d) => (acc._1 + a, acc._2 + b, acc._3 + c, acc._4 + d)
+      })
+      rgba(c._1 / n, c._2 / n, c._3 / n, c._4 / n)
+    }
   }
 
 
@@ -80,6 +79,7 @@ package object scalashop extends BoxBlurKernelInterface {
 
   abstract class TaskScheduler {
     def schedule[T](body: => T): ForkJoinTask[T]
+
     def parallel[A, B](taskA: => A, taskB: => B): (A, B) = {
       val right = task {
         taskB
@@ -116,9 +116,15 @@ package object scalashop extends BoxBlurKernelInterface {
   }
 
   def parallel[A, B, C, D](taskA: => A, taskB: => B, taskC: => C, taskD: => D): (A, B, C, D) = {
-    val ta = task { taskA }
-    val tb = task { taskB }
-    val tc = task { taskC }
+    val ta = task {
+      taskA
+    }
+    val tb = task {
+      taskB
+    }
+    val tc = task {
+      taskC
+    }
     val td = taskD
     (ta.join(), tb.join(), tc.join(), td)
   }
