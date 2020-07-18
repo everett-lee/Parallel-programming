@@ -1,12 +1,15 @@
 import java.util.concurrent._
-import scala.util.DynamicVariable
 
+import scala.util.DynamicVariable
 import org.scalameter._
+import scalashop.RGBA
 
 package object scalashop extends BoxBlurKernelInterface {
 
   /** The value of every pixel is represented as a 32 bit integer. */
   type RGBA = Int
+
+  type RGBATuple =  (RGBA, RGBA, RGBA, RGBA)
 
   /** Returns the red component. */
   def red(c: RGBA): Int = (0xff000000 & c) >>> 24
@@ -35,16 +38,43 @@ package object scalashop extends BoxBlurKernelInterface {
   /** Image is a two-dimensional matrix of pixel values. */
   class Img(val width: Int, val height: Int, private val data: Array[RGBA]) {
     def this(w: Int, h: Int) = this(w, h, new Array(w * h))
+
     def apply(x: Int, y: Int): RGBA = data(y * width + x)
+
     def update(x: Int, y: Int, c: RGBA): Unit = data(y * width + x) = c
   }
 
   /** Computes the blurred RGBA value of a single pixel of the input image. */
-  def boxBlurKernel(src: Img, x: Int, y: Int, radius: Int): RGBA = {
+  def boxBlurKernel(src: Img, x: Int, y: Int, radius: Int): RGBA =
+  {
+    val yMin = y - radius
+    val yMax = y + radius
+    val xMin = x - radius
+    val xMax = x + radius
 
-    // TODO implement using while loops
-    ???
+    def channels(src: Img, x: Int, y: Int): RGBATuple = {
+      val here = src.apply(x, y)
+
+      (red(here), green(here), blue(here), alpha(here))
+    }
+
+    def isOrigin(xHere: Int, yHere: Int): Boolean = xHere == x && yHere == y
+
+    val colourTuples = for {
+         yIndex <- (y - radius) to (y + radius)
+         xIndex <- (x - radius) to (x + radius)
+         if (clamp(xIndex, xMin, xMax) == xIndex
+           && clamp(yIndex, yMin, yMax) == yIndex
+           && !isOrigin(xIndex, yIndex))
+         } yield channels(src, xIndex, yIndex)
+
+    val n = colourTuples.length
+    val c = colourTuples.reduce((acc, tuple) => tuple match {
+      case (a, b, c, d) => (acc._1 + a, acc._2 + b, acc._3 + c, acc._4 + d)
+    })
+    rgba(c._1/n, c._2/n, c._3/n, c._4/n)
   }
+
 
   val forkJoinPool = new ForkJoinPool
 
