@@ -17,8 +17,8 @@ object VerticalBoxBlurRunner {
 
   def main(args: Array[String]): Unit = {
     val radius = 3
-    val width = 500
-    val height = 500
+    val width = 1000
+    val height = 1080
     val src = new Img(width, height)
     val dst = new Img(width, height)
     val seqtime = standardConfig measure {
