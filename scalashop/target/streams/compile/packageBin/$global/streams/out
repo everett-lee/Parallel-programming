@@ -1,4 +1,4 @@
-[0m[[0m[0minfo[0m] [0m[0mPackaging /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/parprog1-scalashop-without-resources_2.13-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0minfo[0m] [0m[0mPackaging /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/parprog1-scalashop_2.13-0.1.0-SNAPSHOT.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/ScalaShop.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/ScalaShop.class[0m
@@ -20,6 +20,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/ScalaShop$ScalaShopFrame$$anon$5.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/HorizontalBoxBlurRunner$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/HorizontalBoxBlurRunner$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	scalashop[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/scratch.sc[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/scratch.sc[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/package$.class[0m
@@ -46,6 +48,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/PhotoCanvas.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/HorizontalBoxBlurRunner.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/HorizontalBoxBlurRunner.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	scalashop/scala.jpg[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/scala.jpg[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/VerticalBoxBlurInterface.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/scalashop/target/scala-2.13/classes/scalashop/VerticalBoxBlurInterface.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	scalashop/package.class[0m
