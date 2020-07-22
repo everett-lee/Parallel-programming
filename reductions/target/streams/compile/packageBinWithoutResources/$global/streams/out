@@ -1,4 +1,4 @@
-[0m[[0m[0minfo[0m] [0m[0mPackaging /home/lee/projects/scala/Parallel-programming/reductions/target/scala-2.13/parprog1-reductions_2.13-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0minfo[0m] [0m[0mPackaging /home/lee/projects/scala/Parallel-programming/reductions/target/scala-2.13/parprog1-reductions-without-resources_2.13-0.1.0-SNAPSHOT.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	reductions/ParallelCountChange$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/lee/projects/scala/Parallel-programming/reductions/target/scala-2.13/classes/reductions/ParallelCountChange$.class[0m

@@ -17,9 +17,9 @@ object ParallelParenthesesBalancingRunner {
   ) withWarmer(new Warmer.Default)
 
   def main(args: Array[String]): Unit = {
-    val length = 100000000
+    val length = 100000
     val chars = new Array[Char](length)
-    val threshold = 10000
+    val threshold = 1000
     val seqtime = standardConfig measure {
       seqResult = ParallelParenthesesBalancing.balance(chars)
     }
@@ -40,22 +40,61 @@ object ParallelParenthesesBalancing extends ParallelParenthesesBalancingInterfac
   /** Returns `true` iff the parentheses in the input `chars` are balanced.
    */
   def balance(chars: Array[Char]): Boolean = {
-    ???
+
+    @tailrec
+    def helper(chars: Array[Char], seen: List[Char]): Boolean = chars match {
+      case Array() =>
+        if (seen.isEmpty) true
+        else false
+      case Array(')', _*) =>
+        if (seen.isEmpty) false
+        else helper(chars.tail, seen.tail)
+      case Array('(', _*) => helper(chars.tail, ')' :: seen)
+      case Array(_*) => helper(chars.tail, seen)
+    }
+
+    if (chars.isEmpty) true
+    else helper(chars, List())
   }
 
   /** Returns `true` iff the parentheses in the input `chars` are balanced.
    */
   def parBalance(chars: Array[Char], threshold: Int): Boolean = {
 
-    def traverse(idx: Int, until: Int, arg1: Int, arg2: Int) /*: ???*/ = {
-      ???
+    def traverse(idx: Int, until: Int, leftBrackets: Int, rightBrackets: Int): (Int, Int) = {
+      var i = idx
+      var remainingOpen = leftBrackets
+      var remClosed = rightBrackets
+      while (i < until) {
+        val current = chars(i)
+
+        if (current == '(') {
+          remainingOpen += 1
+        }
+        if (current == ')') {
+          if (remainingOpen > 0) remainingOpen -= 1
+          else remClosed += 1
+        }
+
+        i += 1
+      }
+      (remainingOpen, remClosed)
     }
 
-    def reduce(from: Int, until: Int) /*: ???*/ = {
-      ???
+    def reduce(from: Int, until: Int): (Int, Int) = {
+
+      if (until - from <= threshold) {
+          traverse(from, until, 0, 0)
+      } else {
+        val mid = (from + until) / 2
+        val ((leftRemOpen, leftRemClosed), (rightRemOpen, rightRemClosed)) =
+          parallel(reduce(from, mid), reduce(mid, until))
+        (leftRemOpen + rightRemOpen - rightRemClosed, leftRemClosed + rightRemClosed - leftRemOpen)
+      }
     }
 
-    reduce(0, chars.length) == ???
+    val res = reduce(0, chars.length)
+    res == (0, 0)
   }
 
   // For those who want more:

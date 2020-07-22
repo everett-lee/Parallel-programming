@@ -118,6 +118,77 @@ class ReductionsSuite {
     check(").", false)
   }
 
+  @Test def `balance should work for string of length 6`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(balance(input.toArray) == expected,
+        s"balance($input) should be $expected")
+
+    check("()()()", true)
+    check("(()())", true)
+    check("(())()", true)
+    check("(.)(.)", true)
+    check("(.().)", true)
+    check("((().)", false)
+    check("((((((", false)
+  }
+
+  val threshold = 3
+
+  @Test def `parBalance should work for empty string`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(parBalance(input.toArray, threshold) == expected,
+        s"parBalance($input) should be $expected")
+
+    check("", true)
+  }
+
+  @Test def `parBalance should work for string of length 1`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(parBalance(input.toArray, threshold) == expected,
+        s"balance($input) should be $expected")
+
+    check("(", false)
+    check(")", false)
+    check(".", true)
+  }
+
+  @Test def `parBalance should work for string of length 2`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(parBalance(input.toArray, threshold) == expected,
+        s"balance($input) should be $expected")
+
+    check("()", true)
+    check(")(", false)
+    check("((", false)
+    check("))", false)
+    check(".)", false)
+    check(".(", false)
+    check("(.", false)
+    check(").", false)
+  }
+
+  @Test def `parBalance should work for string of length 6`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(parBalance(input.toArray, threshold) == expected,
+        s"balance($input) should be $expected")
+
+    check("()()()", true)
+    check("(()())", true)
+    check("(())()", true)
+    check("(.)(.)", true)
+    check("(.().)", true)
+    check("((().)", false)
+    check("((((((", false)
+  }
+
+  @Test def `parBalance should work with threshold 1`: Unit = {
+    def check(input: String, expected: Boolean) =
+      assert(parBalance(input.toArray, 1) == expected,
+        s"balance($input) should be $expected")
+
+    check(")(", false)
+    check("'(()())'", true)
+  }
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
 }
