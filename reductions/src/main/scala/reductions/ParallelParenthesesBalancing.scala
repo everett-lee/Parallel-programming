@@ -14,7 +14,7 @@ object ParallelParenthesesBalancingRunner {
     Key.exec.maxWarmupRuns -> 80,
     Key.exec.benchRuns -> 120,
     Key.verbose -> true
-  ) withWarmer(new Warmer.Default)
+  ) withWarmer (new Warmer.Default)
 
   def main(args: Array[String]): Unit = {
     val length = 100000
@@ -84,12 +84,15 @@ object ParallelParenthesesBalancing extends ParallelParenthesesBalancingInterfac
     def reduce(from: Int, until: Int): (Int, Int) = {
 
       if (until - from <= threshold) {
-          traverse(from, until, 0, 0)
+        traverse(from, until, 0, 0)
       } else {
         val mid = (from + until) / 2
         val ((leftRemOpen, leftRemClosed), (rightRemOpen, rightRemClosed)) =
           parallel(reduce(from, mid), reduce(mid, until))
-        (leftRemOpen + rightRemOpen - rightRemClosed, leftRemClosed + rightRemClosed - leftRemOpen)
+
+        val leftSum = if (leftRemOpen > 0) leftRemOpen + rightRemOpen - rightRemClosed else 0
+        val rightSum = if (rightRemOpen > 0) leftRemClosed + rightRemClosed - leftRemOpen else 0
+        (leftSum, rightSum)
       }
     }
 

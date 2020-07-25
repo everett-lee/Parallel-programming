@@ -18,8 +18,32 @@ class ReductionsSuite {
     assertEquals(List(0f, 1f, 4f, 4f), output.toList)
   }
 
+  import LineOfSight._
+  @Test def `lineOfSight should correctly handle an array of size 8`: Unit = {
+    val output = new Array[Float](8)
+    lineOfSight(Array[Float](0f, 1f, 80f, 3f, 0f, 1f, 85f, 45f), output)
+    assertEquals(List(0f, 1f, 40f, 40f, 40f, 40f, 40f, 40f), output.toList)
+  }
 
+  import LineOfSight._
+  @Test def `parLineOfSight should correctly handle an array of size 4`: Unit = {
+    val output = new Array[Float](4)
+    parLineOfSight(Array[Float](0f, 1f, 8f, 9f), output, 2)
+    assertEquals(List(0f, 1f, 4f, 4f), output.toList)
+  }
 
+  import LineOfSight._
+  @Test def `parLineOfSight should correctly handle an array of size 8`: Unit = {
+    val output = new Array[Float](8)
+    parLineOfSight(Array[Float](0f, 1f, 80f, 3f, 0f, 1f, 85f, 45f), output, 2)
+    assertEquals(List(0f, 1f, 40f, 40f, 40f, 40f, 40f, 40f), output.toList)
+  }
+
+  import LineOfSight._
+  @Test def `upsweepSequential should correctly handle an array of size 8`: Unit = {
+    val res = upsweepSequential(Array[Float](0f, 1f, 80f, 3f, 0f, 1f, 85f, 45f), 1, 7)
+    assertEquals(40f, res, 0.001)
+  }
 
   /*******************************
    * PARALLEL COUNT CHANGE SUITE *
