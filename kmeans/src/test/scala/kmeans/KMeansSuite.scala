@@ -1,7 +1,8 @@
 package kmeans
 
 import java.util.concurrent._
-import scala.collection.{mutable, Map, Seq}
+
+import scala.collection.{Map, Seq, mutable}
 import scala.collection.parallel.{ParMap, ParSeq}
 import scala.collection.parallel.CollectionConverters._
 import scala.math._
@@ -55,6 +56,21 @@ class KMeansSuite {
     checkClassify(points, means, expected)
   }
 
+  @Test def `'update' should work for 'points' == Seq((1, 1, 0), (1, -1, 0), (-1, 1, 0), (-1, -1, 0)) and 'means' == Seq((1, 0, 0), (-1, 0, 0))`: Unit = {
+    val p1 = new Point(1, 1, 0)
+    val p2 = new Point(1, -1, 0)
+    val p3 = new Point(-1, 1, 0)
+    val p4 = new Point(-1, -1, 0)
+    val points: Seq[Point] = IndexedSeq(p1, p2, p3, p4)
+    val mean1 = new Point(1, 0, 0)
+    val mean2 = new Point(-1, 0, 0)
+    val means: Seq[Point] = IndexedSeq(mean1, mean2)
+    val mapped = classify(points, means);
+    val res = update(mapped, means).toArray.sortBy(point => point.x).map(el => el.toString).toSeq
+
+    assertEquals(res, Seq(new Point(-1.0, 0.0, 0.0).toString, new Point(1.0, 0.0, 0.0).toString))
+  }
+
   def checkParClassify(points: ParSeq[Point], means: ParSeq[Point], expected: ParMap[Point, ParSeq[Point]]): Unit = {
     assertEquals(s"classify($points, $means) should equal to $expected", expected, classify(points, means))
   }
@@ -97,6 +113,21 @@ class KMeansSuite {
     val means: ParSeq[Point] = IndexedSeq(mean1, mean2).par
     val expected = ParMap((mean1, ParSeq(p1, p2)), (mean2, ParSeq(p3, p4)))
     checkParClassify(points, means, expected)
+  }
+
+  @Test def `parallel 'update' should work for 'points' == Seq((1, 1, 0), (1, -1, 0), (-1, 1, 0), (-1, -1, 0)) and 'means' == Seq((1, 0, 0), (-1, 0, 0))`: Unit = {
+    val p1 = new Point(1, 1, 0)
+    val p2 = new Point(1, -1, 0)
+    val p3 = new Point(-1, 1, 0)
+    val p4 = new Point(-1, -1, 0)
+    val points: ParSeq[Point] = IndexedSeq(p1, p2, p3, p4).par
+    val mean1 = new Point(1, 0, 0)
+    val mean2 = new Point(-1, 0, 0)
+    val means: ParSeq[Point] = IndexedSeq(mean1, mean2).par
+    val mapped = classify(points, means);
+    val res = update(mapped, means).toArray.sortBy(point => point.x).map(el => el.toString).par
+
+    assertEquals(res, ParSeq(new Point(-1.0, 0.0, 0.0).toString, new Point(1.0, 0.0, 0.0).toString))
   }
 
 }
